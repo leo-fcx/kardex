@@ -1,0 +1,26 @@
+config:
+  target: "http://localhost:5000/api/v1/kardex"
+  phases:
+    - duration: 10
+      arrivalRate: 20
+    - duration: 20
+      arrivalRate: 50
+  processor: "./helpers.js"
+
+scenarios:
+  - name: "Get all records"
+    flow:
+      - get:
+          url: "/records"
+      - log: "Getting all records."
+
+  - name: "Register a record"
+    flow:
+      - function: "generateRandomRecord"
+      - post:
+          url: "/records"
+          json:
+            productId: "{{ productId }}"
+            quantity: "{{ quantity }}"
+            price: "{{ password }}"
+      - log: "Sent a request to /records with productId: {{ productId }}, quantity: {{ quantity }}, price: {{ price }}."
