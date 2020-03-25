@@ -22,5 +22,5 @@ scenarios:
           json:
             productId: "{{ productId }}"
             quantity: "{{ quantity }}"
-            price: "{{ password }}"
+            price: "{{ price }}"
       - log: "Sent a request to /records with productId: {{ productId }}, quantity: {{ quantity }}, price: {{ price }}."

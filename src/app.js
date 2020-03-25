@@ -1,24 +1,20 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import Record from './models/record';
-// import InvoiceAdapter from './adapters/invoice';
+import RecordAdapter from './adapters/record';
 import RecordController from './controllers/record';
 import RecordValidator from './validators/record';
 
 // Set up the express app
 const app = express();
-
-// const recordController = process.env.USE_MESSAGE_BROKER
-//   ? new InvoiceAdapter(new RecordController())
-//   : new RecordController();
-const recordController = new RecordController();
+const recordController = new RecordAdapter(new RecordController());
 const recordValidator = new RecordValidator();
 
 // Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// get all invoices
+// get all records
 app.get('/api/v1/kardex/records', (req, res) => {
   recordController
     .get()
@@ -30,11 +26,14 @@ app.get('/api/v1/kardex/records', (req, res) => {
       });
     })
     .catch(function(error) {
-      res.status(400).send({
+      const payload = {
         success: 'false',
         message: 'Something went wrong.',
         error
-      })
+      };
+
+      console.error(payload);
+      res.status(400).send(payload);
     });
 });
 
@@ -44,6 +43,7 @@ app.post('/api/v1/kardex/records', (req, res) => {
   const validationResult = recordValidator.validate(record);
 
   if (!validationResult.isValid) {
+    console.error(validationResult.error);
     return res.status(400).send(validationResult.error);
   }
 
@@ -57,11 +57,14 @@ app.post('/api/v1/kardex/records', (req, res) => {
       });
     })
     .catch(function(error) {
-      res.status(400).send({
+      const payload = {
         success: 'false',
         message: 'Something went wrong.',
         error
-      })
+      };
+
+      console.error(payload);
+      res.status(400).send(payload)
     });
 });
 

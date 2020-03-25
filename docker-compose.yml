@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  rabbit-mq:
+    image: rabbitmq:3.6-management
+    container_name: kardex-rabbitmq-dc
+    ports:
+      - "5672:5672"
+      - "9999:15672"
