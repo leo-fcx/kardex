@@ -1,5 +1,7 @@
 import amqp from 'amqplib';
 
+const weightedProducts = {};
+
 const getChannel = function(key, cb) {
   console.log(process.env.USER, process.env.PASS);
   return amqp
@@ -35,6 +37,27 @@ class RecordAdapter {
 
   create(record) {
     this.initConsumer();
+
+    if (!weightedProducts[record.productId]) {
+      weightedProducts[record.productId] = {
+        previousLastPrice: 0,
+        lastPrice: 0,
+        weightedPrice: 0,
+      }
+    }
+    const weightedProduct = weightedProducts[record.productId];
+
+    if (!weightedProduct.lastPrice) {
+      weightedProduct.lastPrice = record.price;
+    }
+
+    weightedProduct.previousLastPrice = weightedProduct.lastPrice;
+    weightedProduct.lastPrice = record.price;
+    weightedProduct.weightedPrice = (weightedProduct.lastPrice + weightedProduct.previousLastPrice) / 2;
+
+    console.info('');
+    console.info(`QUEUED >>> PRODUCT ID: ${record.productId} | WEIGHTED PRICE: ${weightedProduct.weightedPrice} <--`);
+
     this.channel.sendToQueue(this.key, Buffer.from(JSON.stringify(record)));
 
     return Promise.resolve({ something: undefined });
@@ -54,7 +77,7 @@ class RecordAdapter {
         const data = msg.content.toString();
         const parsedData = JSON.parse(data);
 
-        console.info(`GOT <<<<< PRODUCT ID: ${parsedData.productId} |          PRICE: ${parsedData.price}`);
+        console.info(`GOT <<<<<< PRODUCT ID: ${parsedData.productId} |          PRICE: ${parsedData.price}`);
 
         this.controller.create(parsedData);
         this.channel.ack(msg);

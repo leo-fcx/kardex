@@ -22,7 +22,7 @@ class RecordController {
     weightedProduct.lastPrice = record.price;
     weightedProduct.weightedPrice = (weightedProduct.lastPrice + weightedProduct.previousLastPrice) / 2;
 
-    console.info(`SAVED >>> PRODUCT ID: ${record.productId} | WEIGHTED PRICE: ${weightedProduct.weightedPrice}`);
+    console.info(`SAVED ==== PRODUCT ID: ${record.productId} | WEIGHTED PRICE: ${weightedProduct.weightedPrice} <--`);
 
     return Promise.resolve(db.create(record));
   }
