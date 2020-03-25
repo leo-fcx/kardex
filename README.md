@@ -8,10 +8,10 @@ This project is compound of two parts:
 ### How to run RabbitMQ server
 As a single and easier alternative, we introduced the usage od DOCKER COMPOSE to start our services. If you want, you can run following commands in the root of the project to have all servers working:
 
-* To create and start all docker instances: docker-compose up -d
-* To stop all docker instances: docker-compose stop
-* To start all docker instances: docker-compose start
-* To stop and destroy all docker instances: docker-compose down
+* To create and start all docker instances: `docker-compose up -d`
+* To stop all docker instances: `docker-compose stop`
+* To start all docker instances: `docker-compose start`
+* To stop and destroy all docker instances: `docker-compose down`
 
 ### How to run the Kardex API?
 Follow next steps in order to run the Kardex API:
